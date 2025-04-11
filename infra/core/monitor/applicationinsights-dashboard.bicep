@@ -23,8 +23,14 @@ resource applicationInsightsDashboard 'Microsoft.Portal/dashboards@2020-09-01-pr
             metadata: {
               inputs: []
               type: 'Extension/HubsExtension/PartType/MarkdownPart'
-              settings: {  // Changed 'asset' to 'settings'
-                content: '# Usage'
+              settings: {
+                content: {
+                  settings: {
+                    content: '# Usage'
+                    title: ''
+                    subtitle: ''
+                  }
+                }
               }
             }
           }
@@ -1221,3 +1227,15 @@ resource applicationInsightsDashboard 'Microsoft.Portal/dashboards@2020-09-01-pr
 resource applicationInsights 'Microsoft.Insights/components@2020-02-02' existing = {
   name: applicationInsightsName
 }
+
+- name: Deploy Azure Resources
+  uses: Azure/arm-deploy@v1.0.8
+  with:
+    scope: subscription
+    subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+    region: ${{ env.AZURE_LOCATION }}
+    template: infra/main.bicep
+    # Remove the deploymentMode parameter - it's redundant at subscription scope
+    deploymentName: gh-actions
+    parameters: environmentName=${{ env.AZURE_ENV_NAME }} location=${{ env.AZURE_LOCATION }} apiServiceName=${{ env.AZURE_API_NAME }} webServiceName=${{ env.AZURE_APP_NAME }} sqlAdminPassword=${{ secrets.AZURE_SQL_PASSWORD }} appUserPassword=${{ secrets.AZURE_APP_PASSWORD }}
+    failOnStdErr: false
