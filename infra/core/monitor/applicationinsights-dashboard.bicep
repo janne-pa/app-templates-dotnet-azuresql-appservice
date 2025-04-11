@@ -17,27 +17,15 @@ resource applicationInsightsDashboard 'Microsoft.Portal/dashboards@2020-09-01-pr
             position: {
               x: 0
               y: 0
-              colSpan: 2
+              colSpan: 6
               rowSpan: 1
             }
             metadata: {
-              inputs: [
-                {
-                  name: 'id'
-                  value: '/subscriptions/${subscription().subscriptionId}/resourceGroups/${resourceGroup().name}/providers/Microsoft.Insights/components/${applicationInsights.name}'
-                }
-                {
-                  name: 'Version'
-                  value: '1.0'
-                }
-              ]
-              #disable-next-line BCP036
-              type: 'Extension/AppInsightsExtension/PartType/AspNetOverviewPinnedPart'
-              asset: {
-                idInputName: 'id'
-                type: 'ApplicationInsights'
+              inputs: []
+              type: 'Extension/HubsExtension/PartType/MarkdownPart'
+              settings: {  // Changed 'asset' to 'settings'
+                content: '# Usage'
               }
-              defaultMenuItemId: 'overview'
             }
           }
           {
