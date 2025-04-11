@@ -1,9 +1,9 @@
+param location string
+param tags object = {}
 param logAnalyticsName string
 param applicationInsightsName string
-param applicationInsightsDashboardName string
-param location string = resourceGroup().location
-param tags object = {}
 
+// Log Analytics workspace
 module logAnalytics 'loganalytics.bicep' = {
   name: 'loganalytics'
   params: {
@@ -13,13 +13,13 @@ module logAnalytics 'loganalytics.bicep' = {
   }
 }
 
+// Application Insights
 module applicationInsights 'applicationinsights.bicep' = {
   name: 'applicationinsights'
   params: {
     name: applicationInsightsName
     location: location
     tags: tags
-    dashboardName: applicationInsightsDashboardName
     logAnalyticsWorkspaceId: logAnalytics.outputs.id
   }
 }
@@ -27,5 +27,3 @@ module applicationInsights 'applicationinsights.bicep' = {
 output applicationInsightsConnectionString string = applicationInsights.outputs.connectionString
 output applicationInsightsInstrumentationKey string = applicationInsights.outputs.instrumentationKey
 output applicationInsightsName string = applicationInsights.outputs.name
-output logAnalyticsWorkspaceId string = logAnalytics.outputs.id
-output logAnalyticsWorkspaceName string = logAnalytics.outputs.name
